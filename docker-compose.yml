@@ -33,10 +33,10 @@ services:
   client:
     build:
       dockerfile: Dockerfile.dev
-      context: ./client
+      context: ./client-1
     volumes:
       - /app/node_modules
-      - ./client:/app
+      - ./client-1:/app
   worker:
     build:
       dockerfile: Dockerfile.dev
