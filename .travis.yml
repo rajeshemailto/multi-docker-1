@@ -1,0 +1,25 @@
+sudo: required
+
+services:
+  - docker
+
+before_install:
+  - docker build -t rajeshemailto/muti-docker -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run rajeshemailto/multi-docker npm test -- --coverage
+
+after_success:
+  - docker build -t rajeshemailto/multi-client ./client 
+  - docker build -t rajeshemailto/multi-nginx ./nginx 
+  - docker build -t rajeshemailto/multi-server ./server 
+  - docker build -t rajeshemailto/multi-worker ./worker
+
+  #Login to Docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+
+  #PUSH to server
+  - docker push rajeshemailto/multi-client
+  - docker push rajeshemailto/multi-nginx
+  - docker push rajeshemailto/multi-server
+  - docker push rajeshemailto/multi-worker
